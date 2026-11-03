@@ -1,15 +1,75 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>IDKWTP — I Don't Know What To Play</title><link rel="stylesheet" href="style.css"><link rel="icon" href="assets/classes/warrior.jpg"></head><body>
-<header><h1>IDKWTP</h1><p>I Don't Know What To Play — a World of Warcraft class randomizer</p></header>
-<main>
-<section class="panel"><div class="tabs"><button data-mode="solo" class="on">Personal</button><button data-mode="group">Group</button></div>
-<h2>What do you like?</h2><div id="filters"></div><p id="count"></p>
-<div class="row"><label>Game <select id="game"><option value="forever">WoW: Forever</option><option value="retail">Retail (Midnight)</option></select></label><label>Format <select id="bo"><option value="1">Single roll</option><option value="3">Best of 3</option><option value="5">Best of 5</option></select></label>
-<label id="faclbl">Faction <select id="fac"><option value="">Any</option><option>Alliance</option><option>Horde</option></select></label></div>
-<div id="groupbox" hidden><h2>Players</h2><div class="row"><input id="pname" placeholder="Player name"><button id="padd">Add</button></div><ul id="plist"></ul>
-<label><input type="checkbox" id="nodup" checked> Avoid duplicate classes</label> <label><input type="checkbox" id="comp"> Enforce 1 tank / 1 healer / rest DPS</label></div>
-<button id="spin" class="big">SPIN</button></section>
-<section class="panel"><div class="machine"><div class="reel"><div class="strip" id="r1"></div></div><div class="reel"><div class="strip" id="r2"></div></div></div>
-<div id="tally"></div><div id="result"></div></section>
-</main><footer>Fan project. Not affiliated with Blizzard Entertainment. World of Warcraft and related marks belong to Blizzard. Icons via Wowhead (zamimg) and Warcraft Wiki; data from warcraft.wiki.gg.</footer>
-<script src="data.js"></script><script src="app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>IDKWTP — I Don't Know What To Play</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" href="assets/classes/warrior.jpg" />
+  </head>
+  <body>
+    <header>
+      <h1>IDKWTP</h1>
+      <p>I Don't Know What To Play — a World of Warcraft class randomizer</p>
+    </header>
+    <main>
+      <section class="panel">
+        <div class="tabs">
+          <button data-mode="solo" class="on">Personal</button
+          ><button data-mode="group">Group</button>
+        </div>
+        <h2>What do you like?</h2>
+        <div id="filters"></div>
+        <p id="count"></p>
+        <div class="row">
+          <label
+            >Game
+            <select id="game">
+              <option value="forever">WoW: Forever</option>
+              <option value="retail">Retail (Midnight)</option>
+            </select></label
+          ><label
+            >Format
+            <select id="bo">
+              <option value="1">Single roll</option>
+              <option value="3">Best of 3</option>
+              <option value="5">Best of 5</option>
+            </select></label
+          >
+          <label id="faclbl"
+            >Faction
+            <select id="fac">
+              <option value="">Any</option>
+              <option>Alliance</option>
+              <option>Horde</option>
+            </select></label
+          >
+        </div>
+        <div id="groupbox" hidden>
+          <h2>Players</h2>
+          <div class="row">
+            <input id="pname" placeholder="Player name" /><button id="padd">Add</button>
+          </div>
+          <ul id="plist"></ul>
+          <label><input type="checkbox" id="nodup" checked /> Avoid duplicate classes</label>
+          <label><input type="checkbox" id="comp" /> Enforce 1 tank / 1 healer / rest DPS</label>
+        </div>
+        <button id="spin" class="big">SPIN</button>
+      </section>
+      <section class="panel">
+        <div class="machine">
+          <div class="reel"><div class="strip" id="r1"></div></div>
+          <div class="reel"><div class="strip" id="r2"></div></div>
+        </div>
+        <div id="tally"></div>
+        <div id="result"></div>
+      </section>
+    </main>
+    <footer>
+      Fan project. Not affiliated with Blizzard Entertainment. World of Warcraft and related marks
+      belong to Blizzard. Icons via Wowhead (zamimg) and Warcraft Wiki; data from warcraft.wiki.gg.
+    </footer>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

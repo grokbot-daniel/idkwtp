@@ -1,39 +1,221 @@
 "use strict";
-const $=s=>document.querySelector(s);
-const FG={Role:["tank","healer","damage"],Range:["melee","ranged"],Armor:["Cloth","Leather","Mail","Plate"],Style:["burst","sustained","dot","aoe","pets","hots","mobility","utility","support","beginner","complex"]};
-const sel={};let mode="solo",players=[];
-let game="forever",CLASSES,RACES,SPECS;function setGame(g){game=g;CLASSES=GAMES[g].classes;RACES=GAMES[g].races;SPECS=CLASSES.flatMap(c=>c.specs.map(s=>({...s,cls:c})))}setGame("forever");
-function buildFilters(){const f=$("#filters");for(const[g,vals]of Object.entries(FG)){sel[g]=new Set();const d=document.createElement("div");d.className="group";d.innerHTML=`<b>${g}</b>`;
- vals.forEach(v=>{const b=document.createElement("button");b.textContent=v;b.onclick=()=>{sel[g].has(v)?sel[g].delete(v):sel[g].add(v);b.classList.toggle("on");update()};d.append(b)});f.append(d)}}
-function races(c){const fac=$("#fac").value;return RACES.filter(r=>r.cls.includes(c.id)&&(!fac||r.f===fac||r.f==="Neutral"))}
-function pool(){return SPECS.filter(s=>(!sel.Role.size||sel.Role.has(s.role))&&(!sel.Range.size||sel.Range.has(s.range))&&(!sel.Armor.size||sel.Armor.has(s.cls.armor))&&[...sel.Style].every(t=>s.traits.includes(t))&&races(s.cls).length)}
-function update(){const p=pool();$("#count").textContent=`${p.length} specs across ${new Set(p.map(s=>s.cls.id)).size} classes left`}
-const pick=a=>a[Math.floor(Math.random()*a.length)];
-const cimg=c=>`assets/classes/${c.id}.jpg`,rimg=r=>`assets/races/${r.img}`;
-function spinReel(el,imgs,final,ms){return new Promise(res=>{const n=20;el.innerHTML="";const list=[...Array(n)].map(()=>pick(imgs)).concat(final);
- list.forEach(src=>{const i=new Image();i.src=src;el.append(i)});el.style.transition="none";el.style.transform="translateY(0)";el.offsetHeight;
- el.style.transition=`transform ${ms}ms cubic-bezier(.15,.7,.2,1)`;el.style.transform=`translateY(-${n*120}px)`;setTimeout(res,ms)})}
-async function rollOne(p){const s=pick(p),r=pick(races(s.cls));
- await Promise.all([spinReel($("#r1"),p.map(x=>cimg(x.cls)),cimg(s.cls),1400),spinReel($("#r2"),races(s.cls).map(rimg),rimg(r),1800)]);return{s,r}}
-function card(x,who){return`<div class="card" style="border-color:${x.s.cls.color}"><h3 style="color:${x.s.cls.color}">${who?who+": ":""}${x.r.name} ${x.s.n} ${x.s.cls.name}</h3>
- <span class="tag">${x.s.role}</span><span class="tag">${x.s.range}</span><span class="tag">${x.s.cls.armor}</span>${x.s.traits.map(t=>`<span class="tag">${t}</span>`).join("")}<p>${x.s.exp}</p></div>`}
-async function bestOf(p,n,who){const need=Math.ceil(n/2),wins={},rolls=[];let out;
- while(true){const x=await rollOne(p);rolls.push(x);const k=x.s.cls.id+x.s.n;wins[k]=(wins[k]||0)+1;
-  $("#tally").insertAdjacentHTML("beforeend",`<img src="${cimg(x.s.cls)}" title="${x.s.n} ${x.s.cls.name}">`);
-  if(n==1||wins[k]>=need){out=x;break}if(rolls.length>=n){const best=Math.max(...Object.values(wins));out=rolls.find(y=>wins[y.s.cls.id+y.s.n]===best);break}}
- $("#tally").lastElementChild.classList.add("win");return out}
-async function spin(){const btn=$("#spin");let p=pool();if(!p.length)return alert("No specs match those filters!");btn.disabled=true;$("#tally").innerHTML="";$("#result").innerHTML="";const n=+$("#bo").value;
- if(mode==="solo"){const x=await bestOf(p,n);$("#result").innerHTML=card(x)}
- else{if(!players.length)players=["Player 1"];const used=new Set();const comp=$("#comp").checked;
-  for(let i=0;i<players.length;i++){let q=p;if($("#nodup").checked)q=q.filter(s=>!used.has(s.cls.id));
-   if(comp){const role=i===0?"tank":i===1?"healer":"damage";const r=q.filter(s=>s.role===role);if(r.length)q=r}
-   if(!q.length)q=p;$("#tally").insertAdjacentHTML("beforeend",`<b>${players[i]}:</b>`);const x=await bestOf(q,n,players[i]);used.add(x.s.cls.id);$("#result").insertAdjacentHTML("beforeend",card(x,players[i]))}
-  const roles=[...$("#result").querySelectorAll(".card")].length;$("#result").insertAdjacentHTML("beforeend",`<p class="tag">Classic 5-player comp: 1 tank, 1 healer, 3 damage (${roles} players rolled)</p>`)}
- btn.disabled=false}
-function renderPlayers(){$("#plist").innerHTML=players.map((p,i)=>`<li>${p} <button data-i="${i}">✕</button></li>`).join("")}
-$("#plist").onclick=e=>{if(e.target.dataset.i){players.splice(+e.target.dataset.i,1);renderPlayers()}};
-$("#padd").onclick=()=>{const v=$("#pname").value.trim();if(v){players.push(v.replace(/[<>&"]/g,""));$("#pname").value="";renderPlayers()}};
-$("#pname").onkeydown=e=>{if(e.key==="Enter")$("#padd").click()};
-document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");mode=b.dataset.mode;$("#groupbox").hidden=mode!=="group"});
-$("#fac").onchange=update;$("#game").onchange=e=>{setGame(e.target.value);update();document.querySelector("#r1 img").src=cimg(CLASSES[0])};$("#spin").onclick=spin;
-buildFilters();update();["r1","r2"].forEach((id,k)=>{const i=new Image();i.src=k?rimg(RACES[0]):cimg(CLASSES[0]);$("#"+id).append(i)});
+const $ = (s) => document.querySelector(s);
+const FG = {
+  Role: ["tank", "healer", "damage"],
+  Range: ["melee", "ranged"],
+  Armor: ["Cloth", "Leather", "Mail", "Plate"],
+  Style: [
+    "burst",
+    "sustained",
+    "dot",
+    "aoe",
+    "pets",
+    "hots",
+    "mobility",
+    "utility",
+    "support",
+    "beginner",
+    "complex",
+  ],
+};
+const sel = {};
+let mode = "solo",
+  players = [];
+let game = "forever",
+  CLASSES,
+  RACES,
+  SPECS;
+function setGame(g) {
+  game = g;
+  CLASSES = GAMES[g].classes;
+  RACES = GAMES[g].races;
+  SPECS = CLASSES.flatMap((c) => c.specs.map((s) => ({ ...s, cls: c })));
+}
+setGame("forever");
+function buildFilters() {
+  const f = $("#filters");
+  for (const [g, vals] of Object.entries(FG)) {
+    sel[g] = new Set();
+    const d = document.createElement("div");
+    d.className = "group";
+    d.innerHTML = `<b>${g}</b>`;
+    vals.forEach((v) => {
+      const b = document.createElement("button");
+      b.textContent = v;
+      b.onclick = () => {
+        sel[g].has(v) ? sel[g].delete(v) : sel[g].add(v);
+        b.classList.toggle("on");
+        update();
+      };
+      d.append(b);
+    });
+    f.append(d);
+  }
+}
+function races(c) {
+  const fac = $("#fac").value;
+  return RACES.filter((r) => r.cls.includes(c.id) && (!fac || r.f === fac || r.f === "Neutral"));
+}
+function pool() {
+  return SPECS.filter(
+    (s) =>
+      (!sel.Role.size || sel.Role.has(s.role)) &&
+      (!sel.Range.size || sel.Range.has(s.range)) &&
+      (!sel.Armor.size || sel.Armor.has(s.cls.armor)) &&
+      [...sel.Style].every((t) => s.traits.includes(t)) &&
+      races(s.cls).length,
+  );
+}
+function update() {
+  const p = pool();
+  $("#count").textContent =
+    `${p.length} specs across ${new Set(p.map((s) => s.cls.id)).size} classes left`;
+}
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+const cimg = (c) => `assets/classes/${c.id}.jpg`,
+  rimg = (r) => `assets/races/${r.img}`;
+function spinReel(el, imgs, final, ms) {
+  return new Promise((res) => {
+    const n = 20;
+    el.innerHTML = "";
+    const list = [...Array(n)].map(() => pick(imgs)).concat(final);
+    list.forEach((src) => {
+      const i = new Image();
+      i.src = src;
+      el.append(i);
+    });
+    el.style.transition = "none";
+    el.style.transform = "translateY(0)";
+    el.offsetHeight;
+    el.style.transition = `transform ${ms}ms cubic-bezier(.15,.7,.2,1)`;
+    el.style.transform = `translateY(-${n * 120}px)`;
+    setTimeout(res, ms);
+  });
+}
+async function rollOne(p) {
+  const s = pick(p),
+    r = pick(races(s.cls));
+  await Promise.all([
+    spinReel(
+      $("#r1"),
+      p.map((x) => cimg(x.cls)),
+      cimg(s.cls),
+      1400,
+    ),
+    spinReel($("#r2"), races(s.cls).map(rimg), rimg(r), 1800),
+  ]);
+  return { s, r };
+}
+function card(x, who) {
+  return `<div class="card" style="border-color:${x.s.cls.color}"><h3 style="color:${x.s.cls.color}">${who ? who + ": " : ""}${x.r.name} ${x.s.n} ${x.s.cls.name}</h3>
+ <span class="tag">${x.s.role}</span><span class="tag">${x.s.range}</span><span class="tag">${x.s.cls.armor}</span>${x.s.traits.map((t) => `<span class="tag">${t}</span>`).join("")}<p>${x.s.exp}</p></div>`;
+}
+async function bestOf(p, n, who) {
+  const need = Math.ceil(n / 2),
+    wins = {},
+    rolls = [];
+  let out;
+  while (true) {
+    const x = await rollOne(p);
+    rolls.push(x);
+    const k = x.s.cls.id + x.s.n;
+    wins[k] = (wins[k] || 0) + 1;
+    $("#tally").insertAdjacentHTML(
+      "beforeend",
+      `<img src="${cimg(x.s.cls)}" title="${x.s.n} ${x.s.cls.name}">`,
+    );
+    if (n == 1 || wins[k] >= need) {
+      out = x;
+      break;
+    }
+    if (rolls.length >= n) {
+      const best = Math.max(...Object.values(wins));
+      out = rolls.find((y) => wins[y.s.cls.id + y.s.n] === best);
+      break;
+    }
+  }
+  $("#tally").lastElementChild.classList.add("win");
+  return out;
+}
+async function spin() {
+  const btn = $("#spin");
+  let p = pool();
+  if (!p.length) return alert("No specs match those filters!");
+  btn.disabled = true;
+  $("#tally").innerHTML = "";
+  $("#result").innerHTML = "";
+  const n = +$("#bo").value;
+  if (mode === "solo") {
+    const x = await bestOf(p, n);
+    $("#result").innerHTML = card(x);
+  } else {
+    if (!players.length) players = ["Player 1"];
+    const used = new Set();
+    const comp = $("#comp").checked;
+    for (let i = 0; i < players.length; i++) {
+      let q = p;
+      if ($("#nodup").checked) q = q.filter((s) => !used.has(s.cls.id));
+      if (comp) {
+        const role = i === 0 ? "tank" : i === 1 ? "healer" : "damage";
+        const r = q.filter((s) => s.role === role);
+        if (r.length) q = r;
+      }
+      if (!q.length) q = p;
+      $("#tally").insertAdjacentHTML("beforeend", `<b>${players[i]}:</b>`);
+      const x = await bestOf(q, n, players[i]);
+      used.add(x.s.cls.id);
+      $("#result").insertAdjacentHTML("beforeend", card(x, players[i]));
+    }
+    const roles = [...$("#result").querySelectorAll(".card")].length;
+    $("#result").insertAdjacentHTML(
+      "beforeend",
+      `<p class="tag">Classic 5-player comp: 1 tank, 1 healer, 3 damage (${roles} players rolled)</p>`,
+    );
+  }
+  btn.disabled = false;
+}
+function renderPlayers() {
+  $("#plist").innerHTML = players
+    .map((p, i) => `<li>${p} <button data-i="${i}">✕</button></li>`)
+    .join("");
+}
+$("#plist").onclick = (e) => {
+  if (e.target.dataset.i) {
+    players.splice(+e.target.dataset.i, 1);
+    renderPlayers();
+  }
+};
+$("#padd").onclick = () => {
+  const v = $("#pname").value.trim();
+  if (v) {
+    players.push(v.replace(/[<>&"]/g, ""));
+    $("#pname").value = "";
+    renderPlayers();
+  }
+};
+$("#pname").onkeydown = (e) => {
+  if (e.key === "Enter") $("#padd").click();
+};
+document.querySelectorAll(".tabs button").forEach(
+  (b) =>
+    (b.onclick = () => {
+      document.querySelectorAll(".tabs button").forEach((x) => x.classList.remove("on"));
+      b.classList.add("on");
+      mode = b.dataset.mode;
+      $("#groupbox").hidden = mode !== "group";
+    }),
+);
+$("#fac").onchange = update;
+$("#game").onchange = (e) => {
+  setGame(e.target.value);
+  update();
+  document.querySelector("#r1 img").src = cimg(CLASSES[0]);
+};
+$("#spin").onclick = spin;
+buildFilters();
+update();
+["r1", "r2"].forEach((id, k) => {
+  const i = new Image();
+  i.src = k ? rimg(RACES[0]) : cimg(CLASSES[0]);
+  $("#" + id).append(i);
+});
