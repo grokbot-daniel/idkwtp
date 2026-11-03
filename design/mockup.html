@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IDKWTP round 2 mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0a0f;--panel:#16120c;--panel-2:#0e0c08;--line:#6b4f1d;--gold:#f8b700;--text:#e8dcc0;--muted:#b9a77f;--r:10px;--fd:"Cinzel",Georgia,serif;--fu:system-ui,"Segoe UI",Roboto,sans-serif;--cc:#3FC7EB}
+*{box-sizing:border-box}body{margin:0;background:var(--bg) radial-gradient(ellipse at top,#2a1d0c,var(--bg) 60%);color:var(--text);font:16px/1.45 var(--fu)}
+main{max-width:720px;margin:auto;padding:16px;display:grid;gap:16px}h1{font:800 3rem var(--fd);color:var(--gold);text-align:center;margin:8px 0 0;letter-spacing:4px;text-shadow:0 0 14px #a46800}
+.sub{text-align:center;color:var(--muted);margin:0}
+.games{display:grid;grid-template-columns:1fr 1fr;gap:12px}.game{height:72px;border:2px solid var(--line);border-radius:var(--r);background:var(--panel);padding:10px 14px}.game b{font-family:var(--fd)}.game small{display:block;color:var(--muted)}.game.on{border-color:var(--gold);box-shadow:0 0 12px #f8b70066}
+.seg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;width:max-content;margin:auto}.seg span{padding:8px 22px}.seg .on{background:#8a5c00;color:#fff}
+.machine{background:#000;border:3px solid var(--gold);border-radius:var(--r);padding:16px;display:flex;gap:12px;justify-content:center;position:relative}.reel{width:160px;height:160px;border:2px solid var(--line);border-radius:8px;display:grid;place-items:center;font:600 1.1rem var(--fd)}.machine:after{content:"";position:absolute;left:8px;right:8px;top:50%;border-top:2px solid #f8b70099}
+.spin{height:56px;width:100%;border:0;border-radius:var(--r);background:linear-gradient(#c98a00,#7a4f00);color:#fff;font:800 1.5rem var(--fd);letter-spacing:6px}
+details{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:12px 16px}summary{cursor:pointer}summary em{color:var(--muted);font-style:normal}
+.chip{display:inline-block;padding:7px 12px;margin:4px;border:1px solid var(--line);border-radius:999px}.chip.on{background:#8a5c00;color:#fff}
+.card{background:var(--panel-2);border-left:5px solid var(--cc);border-radius:var(--r);padding:16px;box-shadow:0 0 24px #3fc7eb59}.icons{display:flex;gap:8px}.ic{width:64px;height:64px;border-radius:8px;border:2px solid var(--line);display:grid;place-items:center;font-size:.7rem;color:var(--muted)}
+.card h3{font:600 1.4rem var(--fd);margin:10px 0 4px}.tag{font-size:.75rem;background:#333;border-radius:8px;padding:2px 8px;margin-right:4px}.why{font-style:italic;color:var(--muted)}.why small{font-style:normal;border:1px solid #555;border-radius:6px;padding:0 5px;margin-left:6px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.acts button{font:600 1rem var(--fu);padding:10px 16px;border-radius:8px;border:1px solid var(--gold);background:none;color:var(--text)}.acts .p{background:var(--gold);color:#1a1000}
+.thumbs{display:flex;gap:6px}.thumbs i{width:40px;height:40px;border:2px solid var(--line);border-radius:4px}.thumbs i.w{border-color:var(--gold);box-shadow:0 0 8px var(--gold)}
+@media(max-width:480px){h1{font-size:2rem}.reel{width:112px;height:112px}}
+</style></head><body><main>
+<h1>IDKWTP</h1><p class="sub">I Don't Know What To Play</p>
+<div class="games"><div class="game on"><b>WoW: Forever</b><small>Classic-style · Nov 4</small></div><div class="game"><b>Retail</b><small>Midnight</small></div></div>
+<div class="seg"><span class="on">Personal</span><span>Group</span></div>
+<div class="machine"><div class="reel">Mage</div><div class="reel">Gnome</div></div>
+<button class="spin">SPIN</button>
+<details open><summary>Customize <em>· 37 specs match · Reset</em></summary><p><span class="chip on">Ranged</span><span class="chip">Melee</span><span class="chip">Tank</span><span class="chip">Healer</span><span class="chip on">DPS</span><span class="chip">Cloth</span><span class="chip">Pets</span></p></details>
+<div class="thumbs"><i></i><i class="w"></i><i></i></div>
+<section class="card" aria-live="polite"><div class="icons"><div class="ic">class</div><div class="ic">race</div></div>
+<h3>Gnome Mage</h3><span class="tag">DPS</span><span class="tag">Ranged</span><span class="tag">Cloth</span>
+<p class="why">Burst damage and crowd control from range, with portals as a bonus.<small>our summary</small></p>
+<div class="acts"><button class="p">Keep it</button><button>Reroll race</button><button>Reroll all</button></div></section>
+</main></body></html>
