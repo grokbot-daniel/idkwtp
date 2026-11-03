@@ -110,10 +110,85 @@ async function rollOne(p) {
   ]);
   return { s, r };
 }
-function card(x, who) {
-  return `<div class="card" style="border-color:${x.s.cls.color}"><h3 style="color:${x.s.cls.color}">${who ? who + ": " : ""}${x.r.name} ${x.s.n} ${x.s.cls.name}</h3>
- <span class="tag">${x.s.role}</span><span class="tag">${x.s.range}</span><span class="tag">${x.s.cls.armor}</span>${x.s.traits.map((t) => `<span class="tag">${t}</span>`).join("")}<p>${x.s.exp}</p></div>`;
+function card(x, who, i) {
+  const c = x.s.cls.color;
+  const actions =
+    who === undefined
+      ? `<div class="actions" data-actions>
+  <button data-act="keep" class="primary">Keep it</button>
+  <button data-act="race">Reroll race</button>
+  <button data-act="all">Reroll all</button></div>`
+      : `<div class="actions"><button data-act="pre" data-i="${i}">Reroll</button></div>`;
+  return `<div class="card" style="border-color:${c}"><h3 style="color:${c}">${who ? who + ": " : ""}${x.r.name} ${x.s.n} ${x.s.cls.name}</h3>
+ <span class="tag">${x.s.role}</span><span class="tag">${x.s.range}</span><span class="tag">${x.s.cls.armor}</span>${x.s.traits.map((t) => `<span class="tag">${t}</span>`).join("")}<p>${x.s.exp}</p>${actions}</div>`;
 }
+let last = null,
+  groupRolls = [];
+const label = (x) => `${x.r.name} ${x.s.n} ${x.s.cls.name}`;
+const KEY = "idkwtp-kept";
+const getKept = () => JSON.parse(localStorage.getItem(KEY) || "[]");
+function renderKept() {
+  let el = $("#kept");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "kept";
+    $("#result").after(el);
+  }
+  const k = getKept();
+  el.innerHTML = k.length
+    ? `<b>Kept:</b> ${k.map((t) => `<span class="tag">${t}</span>`).join("")}`
+    : "";
+}
+function showSolo(x) {
+  last = x;
+  $("#result").innerHTML = card(x);
+  $("#result").setAttribute("aria-live", "polite");
+}
+async function rerollRace() {
+  const opts = races(last.s.cls).filter((r) => r !== last.r);
+  if (!opts.length) return;
+  const r = pick(opts);
+  await spinReel($("#r2"), races(last.s.cls).map(rimg), rimg(r), 1200);
+  showSolo({ s: last.s, r });
+}
+function copyDiscord() {
+  const txt = groupRolls.map((g) => `${g.who}: ${label(g.x)} (${g.x.s.role})`).join("\n");
+  navigator.clipboard?.writeText("**IDKWTP group roll**\n" + txt);
+  const b = $("#copyd");
+  if (b) b.textContent = "Copied!";
+}
+async function rerollPlayer(i) {
+  const p = pool();
+  const used = new Set(groupRolls.filter((_, j) => j !== i).map((g) => g.x.s.cls.id));
+  let q = p.filter((s) => s.role === groupRolls[i].x.s.role);
+  if ($("#nodup").checked) q = q.filter((s) => !used.has(s.cls.id));
+  if (!q.length) q = p;
+  const x = await rollOne(q);
+  groupRolls[i].x = x;
+  renderGroup();
+}
+function renderGroup() {
+  $("#result").innerHTML =
+    groupRolls.map((g, i) => card(g.x, g.who, i)).join("") +
+    `<button id="copyd" data-act="copy">Copy for Discord</button>`;
+}
+$("#result").onclick = async (e) => {
+  const a = e.target.dataset.act;
+  if (!a) return;
+  if (a === "keep") {
+    const k = [label(last), ...getKept()].slice(0, 10);
+    localStorage.setItem(KEY, JSON.stringify(k));
+    renderKept();
+    e.target.closest("[data-actions]").innerHTML = `Kept ✓ · <button data-act="undo">Undo</button>`;
+  } else if (a === "undo") {
+    localStorage.setItem(KEY, JSON.stringify(getKept().slice(1)));
+    renderKept();
+    showSolo(last);
+  } else if (a === "race") await rerollRace();
+  else if (a === "all") spin();
+  else if (a === "pre") await rerollPlayer(+e.target.dataset.i);
+  else if (a === "copy") copyDiscord();
+};
 async function bestOf(p, n, who) {
   const need = Math.ceil(n / 2),
     wins = {},
@@ -151,10 +226,11 @@ async function spin() {
   const n = +$("#bo").value;
   if (mode === "solo") {
     const x = await bestOf(p, n);
-    $("#result").innerHTML = card(x);
+    showSolo(x);
   } else {
     if (!players.length) players = ["Player 1"];
     const used = new Set();
+    groupRolls = [];
     const comp = $("#comp").checked;
     const notes = [];
     for (let i = 0; i < players.length; i++) {
@@ -173,7 +249,8 @@ async function spin() {
       $("#tally").insertAdjacentHTML("beforeend", `<b>${players[i]}:</b>`);
       const x = await bestOf(q, n, players[i]);
       used.add(x.s.cls.id);
-      $("#result").insertAdjacentHTML("beforeend", card(x, players[i]));
+      groupRolls.push({ who: players[i], x });
+      renderGroup();
     }
     if (comp)
       $("#result").insertAdjacentHTML(
@@ -226,6 +303,7 @@ $("#game").onchange = (e) => {
 $("#spin").onclick = spin;
 buildFilters();
 update();
+renderKept();
 ["r1", "r2"].forEach((id, k) => {
   const i = new Image();
   i.src = k ? rimg(RACES[0]) : cimg(CLASSES[0]);
