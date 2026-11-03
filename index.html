@@ -20,7 +20,7 @@
         </div>
         <h2>What do you like?</h2>
         <div id="filters"></div>
-        <p id="count"></p>
+        <p id="count" aria-live="polite"></p>
         <div class="row">
           <label
             >Game
@@ -54,7 +54,7 @@
           <label><input type="checkbox" id="nodup" checked /> Avoid duplicate classes</label>
           <label><input type="checkbox" id="comp" /> Enforce 1 tank / 1 healer / rest DPS</label>
         </div>
-        <button id="spin" class="big">SPIN</button>
+        <button id="spin" class="big" aria-describedby="count">SPIN</button>
       </section>
       <section class="panel">
         <div class="machine">
@@ -69,7 +69,8 @@
       Fan project. Not affiliated with Blizzard Entertainment. World of Warcraft and related marks
       belong to Blizzard. Icons via Wowhead (zamimg) and Warcraft Wiki; data from warcraft.wiki.gg.
     </footer>
-    <script src="data.js"></script>
+    <script src="data/forever.js"></script>
+    <script src="data/retail.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

@@ -150,3 +150,4 @@ footer {
   flex-wrap: wrap;
   align-items: center;
 }
+#spin.off{opacity:.5;cursor:not-allowed}
