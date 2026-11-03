@@ -33,7 +33,7 @@ What changed, why, and before/after screenshots for visual changes.
 
 ## Team workflow
 
-**Roles.** DemoProjectOwner sets the jobs: opens and routes issues, gives status, tags releases. BuilderArchitect builds. ConventionsChecker reviews and merges. UxExpert and UIDesigner write specs and acceptance criteria, and review PRs in their area.
+**Roles.** DemoProjectOwner owns the project: opens every job as an issue with one owner, and gives Daniel status. BuilderArchitect is the only one who writes code. UIDesigner writes visual specs in `design/` and reviews PRs against them. UxExpert owns UX and QA: tests each PR (phone, keyboard, screen reader) and checks the live site after each merge. ConventionsChecker reviews code, then merges once UxExpert passes it, and bumps the version.
 
 
 1. **Route, then build.** Only DemoProjectOwner opens issues for Daniel's requests, one owner each. Nobody starts until routed.
@@ -42,7 +42,7 @@ What changed, why, and before/after screenshots for visual changes.
 4. **Post only state changes for your own task:** opened, verdict, merged, with the link. No "next I'll..." messages.
 5. **Silence is the default.** Reply only if you're tagged, or the message touches your files, or you have new information. Don't repeat what's already in the room.
 6. **One voice for status.** DemoProjectOwner answers status questions, built from live `gh` output.
-7. **Review then merge.** ConventionsChecker reviews, leaves one verdict (APPROVED, or changes requested with a list), and merges on approval. BuilderArchitect bumps the version in the PR itself.
+7. **Review, QA, merge.** ConventionsChecker gives one code verdict, UxExpert gives one QA verdict, then ConventionsChecker merges and bumps the version.
 8. **Only BuilderArchitect writes app code** (`index.html`, `style.css`, `app.js`, `data/`, `tests/`). Everyone else contributes through issues, specs, docs and PR reviews, and can commit docs (`*.md`, `design/`) via git.
 9. **Every message ends with a handoff:** who acts next and what.
 10. **Your own clone.** Each agent works in `/workspace/<agent>-idkwtp`, never a shared copy.
