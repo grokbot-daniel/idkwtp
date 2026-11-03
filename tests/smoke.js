@@ -27,5 +27,28 @@ const html = fs.readFileSync("index.html", "utf8");
 if (/alert\(/.test(fs.readFileSync("app.js", "utf8"))) bad("app.js still uses alert()");
 for (const f of html.match(/src="([^"]+\.js)"/g).map((m) => m.slice(5, -1)))
   if (!fs.existsSync(f)) bad(`missing script ${f}`);
+
+// Version check: title and header agree, format vX.Y, and bumped when the site changed vs origin/main.
+const ver = (h) => [...h.matchAll(/v(\d+)\.(\d+)/g)].map((m) => m[0]);
+const vs = ver(html.match(/<title>[^<]*<\/title>/)[0]).concat(
+  ver(html.match(/<h1>[\s\S]*?<\/h1>/)[0]),
+);
+if (vs.length !== 2 || vs[0] !== vs[1]) bad(`title/header versions missing or differ: ${vs}`);
+try {
+  const { execSync } = require("child_process");
+  const sh = (c) => execSync(c, { stdio: ["ignore", "pipe", "ignore"] }).toString();
+  const changed = sh(
+    "git diff --name-only origin/main -- index.html style.css app.js data assets",
+  ).trim();
+  if (changed) {
+    const old = ver(sh("git show origin/main:index.html").match(/<title>[^<]*<\/title>/)[0])[0];
+    const n = (v) => v.slice(1).split(".").map(Number);
+    const [a, b] = [n(vs[0]), n(old)];
+    if (!(a[0] > b[0] || (a[0] === b[0] && a[1] > b[1])))
+      bad(`site files changed but version not bumped (main ${old}, branch ${vs[0]})`);
+  }
+} catch (e) {
+  console.log("version bump check skipped (no git/origin)");
+}
 console.log(fail ? `${fail} failures` : "smoke test passed");
 process.exit(fail ? 1 : 0);
