@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IDKWTP v3 direction</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0e12;--surf:#16181f;--surf2:#1d2029;--line:#2a2e3a;--text:#eef0f5;--muted:#8b91a3;--cc:#3FC7EB;--rc:#B83A3A;--r:16px;--f:Inter,system-ui,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 var(--f)}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(60% 50% at 50% 0%,color-mix(in srgb,var(--cc) 22%,transparent),transparent 70%);pointer-events:none}
+.wrap{max-width:960px;margin:auto;padding:20px;position:relative}
+nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+.logo{font-weight:800;letter-spacing:.5px}.logo span{color:var(--muted);font-weight:600;font-size:.8rem;margin-left:8px;border:1px solid var(--line);border-radius:99px;padding:2px 8px}
+.seg{display:flex;background:var(--surf);border:1px solid var(--line);border-radius:99px;padding:4px}.seg b{padding:7px 16px;border-radius:99px;font-weight:600;color:var(--muted)}.seg b.on{background:var(--text);color:var(--bg)}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.slot{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:20px;min-height:260px;display:flex;flex-direction:column;justify-content:flex-end;position:relative;overflow:hidden}
+.slot .k{position:absolute;top:16px;left:20px;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.slot .big{font-size:3.2rem;font-weight:800;line-height:1}.slot .sub{color:var(--muted);margin-top:6px}
+.slot.c{background:linear-gradient(160deg,color-mix(in srgb,var(--cc) 30%,var(--surf)),var(--surf) 60%);border-color:color-mix(in srgb,var(--cc) 50%,var(--line))}.slot.c .big{color:var(--cc)}
+.slot.r{background:linear-gradient(160deg,color-mix(in srgb,var(--rc) 28%,var(--surf)),var(--surf) 60%)}
+.slot .re{position:absolute;top:12px;right:12px;background:#0006;border:1px solid var(--line);color:var(--text);border-radius:99px;padding:6px 12px;font:600 .8rem var(--f)}
+.why{grid-column:1/-1;background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.chips span{display:inline-block;background:var(--surf2);border:1px solid var(--line);border-radius:99px;padding:3px 10px;margin:2px;font-size:.8rem;color:var(--muted)}
+.why p{margin:6px 0 0}.why small{color:var(--muted)}
+.cta{display:flex;gap:10px;margin:16px 0}.cta button{flex:1;height:60px;border-radius:14px;font:800 1.1rem var(--f);border:1px solid var(--line);background:var(--surf);color:var(--text)}
+.cta .go{flex:2;background:var(--text);color:var(--bg);border:0;letter-spacing:1px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px}
+.bar .f{background:var(--surf2);border:1px solid var(--line);border-radius:99px;padding:7px 14px;color:var(--muted);font-weight:600;font-size:.85rem}.bar .f.on{color:var(--text);border-color:var(--text)}
+.bar .n{margin-left:auto;color:var(--muted);font-size:.85rem}
+.kept{margin-top:16px;color:var(--muted);font-size:.85rem}.kept span{color:var(--text);background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:4px 10px;margin-left:6px}
+@media(max-width:640px){.hero{grid-template-columns:1fr 1fr;gap:10px}.slot{min-height:170px;padding:14px}.slot .big{font-size:1.9rem}.cta{flex-wrap:wrap}.cta .go{flex-basis:100%}nav{flex-wrap:wrap;gap:10px}}
+</style></head><body><div class="wrap">
+<nav><div class="logo">IDKWTP<span>v3</span></div><div class="seg"><b class="on">Forever</b><b>Midnight</b></div><div class="seg"><b class="on">Solo</b><b>Group</b></div></nav>
+<section class="hero">
+<div class="slot r"><div class="k">Race</div><button class="re">↻ Reroll</button><div class="big">Gnome</div><div class="sub">Alliance</div></div>
+<div class="slot c"><div class="k">Class</div><button class="re">↻ Reroll</button><div class="big">Mage</div><div class="sub">Frost · Ranged DPS · Cloth</div></div>
+<div class="why"><div><div class="chips"><span>beginner</span><span>aoe</span><span>control</span></div><p>Freeze packs and farm safely while leveling. <small>(our summary)</small></p></div></div>
+</section>
+<div class="cta"><button>Keep</button><button class="go">ROLL AGAIN</button></div>
+<div class="bar"><span class="f on">Any role</span><span class="f">Tank</span><span class="f">Healer</span><span class="f on">DPS</span><span class="f">Melee</span><span class="f on">Ranged</span><span class="f">More filters</span><span class="n">28 specs match · Reset</span></div>
+<div class="kept">Kept <span>Gnome Mage</span><span>Orc Warrior</span></div>
+</div></body></html>
