@@ -290,3 +290,4 @@ footer {
     transition-duration: 0.01ms !important;
   }
 }
+#spin.off{opacity:.5;cursor:not-allowed}
