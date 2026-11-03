@@ -156,6 +156,7 @@ async function spin() {
     if (!players.length) players = ["Player 1"];
     const used = new Set();
     const comp = $("#comp").checked;
+    const notes = [];
     for (let i = 0; i < players.length; i++) {
       let q = p;
       if ($("#nodup").checked) q = q.filter((s) => !used.has(s.cls.id));
@@ -163,17 +164,24 @@ async function spin() {
         const role = i === 0 ? "tank" : i === 1 ? "healer" : "damage";
         const r = q.filter((s) => s.role === role);
         if (r.length) q = r;
+        else notes.push(`${players[i]}: no ${role} spec left, rolled any role`);
       }
-      if (!q.length) q = p;
+      if (!q.length) {
+        q = p;
+        notes.push(`${players[i]}: no unused class left, duplicates allowed`);
+      }
       $("#tally").insertAdjacentHTML("beforeend", `<b>${players[i]}:</b>`);
       const x = await bestOf(q, n, players[i]);
       used.add(x.s.cls.id);
       $("#result").insertAdjacentHTML("beforeend", card(x, players[i]));
     }
-    const roles = [...$("#result").querySelectorAll(".card")].length;
-    $("#result").insertAdjacentHTML(
-      "beforeend",
-      `<p class="tag">Classic 5-player comp: 1 tank, 1 healer, 3 damage (${roles} players rolled)</p>`,
+    if (comp)
+      $("#result").insertAdjacentHTML(
+        "beforeend",
+        `<p class="tag">Roles by player order: ${players[0]} tanks${players[1] ? `, ${players[1]} heals` : ""}${players.length > 2 ? ", the rest deal damage" : ""}.</p>`,
+      );
+    notes.forEach((t) =>
+      $("#result").insertAdjacentHTML("beforeend", `<p class="tag">Note: ${t}</p>`),
     );
   }
   btn.disabled = false;
