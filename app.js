@@ -105,7 +105,7 @@ function spinReel(el, imgs, final, ms) {
     el.style.transform = "translateY(0)";
     el.offsetHeight;
     el.style.transition = `transform ${ms}ms cubic-bezier(.15,.7,.2,1)`;
-    el.style.transform = `translateY(-${n * 120}px)`;
+    el.style.transform = `translateY(-${n * el.firstElementChild.offsetHeight}px)`;
     setTimeout(res, ms);
   });
 }
