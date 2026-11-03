@@ -62,14 +62,18 @@ function pool() {
       (!sel.Role.size || sel.Role.has(s.role)) &&
       (!sel.Range.size || sel.Range.has(s.range)) &&
       (!sel.Armor.size || sel.Armor.has(s.cls.armor)) &&
-      [...sel.Style].every((t) => s.traits.includes(t)) &&
+      (!sel.Style.size || [...sel.Style].some((t) => s.traits.includes(t))) &&
       races(s.cls).length,
   );
 }
 function update() {
   const p = pool();
-  $("#count").textContent =
-    `${p.length} specs across ${new Set(p.map((s) => s.cls.id)).size} classes left`;
+  const btn = $("#spin");
+  $("#count").textContent = p.length
+    ? `${p.length} specs across ${new Set(p.map((s) => s.cls.id)).size} classes match`
+    : "0 specs match. Clear a filter to spin.";
+  btn.setAttribute("aria-disabled", p.length ? "false" : "true");
+  btn.classList.toggle("off", !p.length);
 }
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 const cimg = (c) => `assets/classes/${c.id}.jpg`,
@@ -140,7 +144,7 @@ async function bestOf(p, n, who) {
 async function spin() {
   const btn = $("#spin");
   let p = pool();
-  if (!p.length) return alert("No specs match those filters!");
+  if (!p.length || btn.disabled) return;
   btn.disabled = true;
   $("#tally").innerHTML = "";
   $("#result").innerHTML = "";
