@@ -220,6 +220,10 @@ async function spin() {
   const btn = $("#spin");
   let p = pool();
   if (!p.length || btn.disabled) return;
+  document.querySelector(".machine").scrollIntoView({
+    behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    block: "center",
+  });
   btn.disabled = true;
   $("#tally").innerHTML = "";
   $("#result").innerHTML = "";
