@@ -290,4 +290,43 @@ footer {
     transition-duration: 0.01ms !important;
   }
 }
-#spin.off{opacity:.5;cursor:not-allowed}
+#spin.off {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+@media (max-width: 480px) {
+  header {
+    padding: 12px 12px 4px;
+  }
+  header p {
+    font-size: 0.85rem;
+  }
+  main {
+    padding: 0 10px;
+    gap: 10px;
+  }
+  .panel {
+    padding: 12px;
+  }
+  button,
+  select,
+  input {
+    min-height: 44px;
+  }
+  #filters button {
+    min-height: 44px;
+    padding: 8px 14px;
+  }
+  .machine {
+    padding: 10px;
+  }
+  .big {
+    min-height: 60px;
+  }
+  .card h3 {
+    font-size: 1.15rem;
+  }
+}
+html {
+  overflow-x: hidden;
+}
