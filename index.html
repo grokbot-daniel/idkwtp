@@ -4,6 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>IDKWTP — I Don't Know What To Play</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="style.css" />
     <link rel="icon" href="assets/classes/warrior.jpg" />
   </head>
@@ -13,57 +18,66 @@
       <p>I Don't Know What To Play — a World of Warcraft class randomizer</p>
     </header>
     <main>
-      <section class="panel">
-        <div class="tabs">
-          <button data-mode="solo" class="on">Personal</button
-          ><button data-mode="group">Group</button>
-        </div>
-        <h2>What do you like?</h2>
-        <div id="filters"></div>
-        <p id="count" aria-live="polite"></p>
-        <div class="row">
-          <label
+      <section class="panel top" data-ui="setup">
+        <div class="row center">
+          <label class="game"
             >Game
             <select id="game">
               <option value="forever">WoW: Forever</option>
               <option value="retail">Retail (Midnight)</option>
-            </select></label
-          ><label
+            </select>
+          </label>
+          <div class="tabs" role="tablist">
+            <button data-mode="solo" class="on">Personal</button
+            ><button data-mode="group">Group</button>
+          </div>
+        </div>
+        <div id="groupbox" hidden>
+          <h2>Players</h2>
+          <div class="row">
+            <input id="pname" placeholder="Player name" aria-label="Player name" /><button
+              id="padd"
+            >
+              Add
+            </button>
+          </div>
+          <ul id="plist"></ul>
+          <label><input type="checkbox" id="nodup" checked /> Avoid duplicate classes</label>
+          <label><input type="checkbox" id="comp" /> Enforce 1 tank / 1 healer / rest DPS</label>
+        </div>
+      </section>
+      <section class="panel stage" data-ui="machine">
+        <div class="machine">
+          <div class="reel"><div class="strip" id="r1"></div></div>
+          <div class="reel"><div class="strip" id="r2"></div></div>
+        </div>
+        <button id="spin" class="big" aria-describedby="count">SPIN</button>
+        <div id="tally"></div>
+        <div id="result" aria-live="polite"></div>
+      </section>
+      <details class="panel" data-ui="customize">
+        <summary>Customize <span id="count" aria-live="polite"></span></summary>
+        <h2>What do you like?</h2>
+        <div id="filters"></div>
+        <div class="row">
+          <label
             >Format
             <select id="bo">
               <option value="1">Single roll</option>
               <option value="3">Best of 3</option>
               <option value="5">Best of 5</option>
-            </select></label
-          >
+            </select>
+          </label>
           <label id="faclbl"
             >Faction
             <select id="fac">
               <option value="">Any</option>
               <option>Alliance</option>
               <option>Horde</option>
-            </select></label
-          >
+            </select>
+          </label>
         </div>
-        <div id="groupbox" hidden>
-          <h2>Players</h2>
-          <div class="row">
-            <input id="pname" placeholder="Player name" /><button id="padd">Add</button>
-          </div>
-          <ul id="plist"></ul>
-          <label><input type="checkbox" id="nodup" checked /> Avoid duplicate classes</label>
-          <label><input type="checkbox" id="comp" /> Enforce 1 tank / 1 healer / rest DPS</label>
-        </div>
-        <button id="spin" class="big" aria-describedby="count">SPIN</button>
-      </section>
-      <section class="panel">
-        <div class="machine">
-          <div class="reel"><div class="strip" id="r1"></div></div>
-          <div class="reel"><div class="strip" id="r2"></div></div>
-        </div>
-        <div id="tally"></div>
-        <div id="result"></div>
-      </section>
+      </details>
     </main>
     <footer>
       Fan project. Not affiliated with Blizzard Entertainment. World of Warcraft and related marks
