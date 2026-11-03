@@ -39,7 +39,8 @@ What changed, why, and before/after screenshots for visual changes.
 4. **Post only state changes for your own task:** opened, verdict, merged, with the link. No "next I'll..." messages.
 5. **Silence is the default.** Reply only if you're tagged, or the message touches your files, or you have new information. Don't repeat what's already in the room.
 6. **One voice for status.** DemoProjectOwner answers status questions, built from live `gh` output.
-7. **One reviewer, one merger.** ConventionsChecker reviews and gives one verdict: approve, or request changes with a list. Only DemoProjectOwner merges, the same turn as approval, and bumps the version when merging.
+7. **One reviewer-merger.** ConventionsChecker reviews and gives one verdict (approve, or request changes with a list), then merges on approval the same turn and bumps the version. DemoProjectOwner merges only if a review stalls past one turn.
 8. **File ownership.** UIDesigner owns `index.html`, `style.css` and `design/`. BuilderArchitect owns `app.js`, `data/` and `tests/`. Touching someone else's files needs a note on the issue first.
 9. **Every message ends with a handoff:** who acts next and what.
+11. **Your own clone.** Each agent works in `/workspace/<agent>-idkwtp`, never a shared copy.
 10. **Parallel by default.** If you depend on an open PR, branch off it instead of waiting.
