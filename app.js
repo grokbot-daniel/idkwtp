@@ -2,19 +2,19 @@
 const $=s=>document.querySelector(s);
 const FG={Role:["tank","healer","damage"],Range:["melee","ranged"],Armor:["Cloth","Leather","Mail","Plate"],Style:["burst","sustained","dot","aoe","pets","hots","mobility","utility","support","beginner","complex"]};
 const sel={};let mode="solo",players=[];
-const SPECS=CLASSES.flatMap(c=>c.specs.map(s=>({...s,cls:c})));
+let game="forever",CLASSES,RACES,SPECS;function setGame(g){game=g;CLASSES=GAMES[g].classes;RACES=GAMES[g].races;SPECS=CLASSES.flatMap(c=>c.specs.map(s=>({...s,cls:c})))}setGame("forever");
 function buildFilters(){const f=$("#filters");for(const[g,vals]of Object.entries(FG)){sel[g]=new Set();const d=document.createElement("div");d.className="group";d.innerHTML=`<b>${g}</b>`;
  vals.forEach(v=>{const b=document.createElement("button");b.textContent=v;b.onclick=()=>{sel[g].has(v)?sel[g].delete(v):sel[g].add(v);b.classList.toggle("on");update()};d.append(b)});f.append(d)}}
 function races(c){const fac=$("#fac").value;return RACES.filter(r=>r.cls.includes(c.id)&&(!fac||r.f===fac||r.f==="Neutral"))}
 function pool(){return SPECS.filter(s=>(!sel.Role.size||sel.Role.has(s.role))&&(!sel.Range.size||sel.Range.has(s.range))&&(!sel.Armor.size||sel.Armor.has(s.cls.armor))&&[...sel.Style].every(t=>s.traits.includes(t))&&races(s.cls).length)}
 function update(){const p=pool();$("#count").textContent=`${p.length} specs across ${new Set(p.map(s=>s.cls.id)).size} classes left`}
 const pick=a=>a[Math.floor(Math.random()*a.length)];
-const cimg=c=>`assets/classes/${c.id}.jpg`,rimg=r=>`assets/races/${r.id}.jpg`;
+const cimg=c=>`assets/classes/${c.id}.jpg`,rimg=r=>`assets/races/${r.img}`;
 function spinReel(el,imgs,final,ms){return new Promise(res=>{const n=20;el.innerHTML="";const list=[...Array(n)].map(()=>pick(imgs)).concat(final);
  list.forEach(src=>{const i=new Image();i.src=src;el.append(i)});el.style.transition="none";el.style.transform="translateY(0)";el.offsetHeight;
  el.style.transition=`transform ${ms}ms cubic-bezier(.15,.7,.2,1)`;el.style.transform=`translateY(-${n*120}px)`;setTimeout(res,ms)})}
 async function rollOne(p){const s=pick(p),r=pick(races(s.cls));
- await Promise.all([spinReel($("#r1"),p.map(x=>cimg(x.cls)),cimg(s.cls),1400),spinReel($("#r2"),RACES.map(rimg),rimg(r),1800)]);return{s,r}}
+ await Promise.all([spinReel($("#r1"),p.map(x=>cimg(x.cls)),cimg(s.cls),1400),spinReel($("#r2"),races(s.cls).map(rimg),rimg(r),1800)]);return{s,r}}
 function card(x,who){return`<div class="card" style="border-color:${x.s.cls.color}"><h3 style="color:${x.s.cls.color}">${who?who+": ":""}${x.r.name} ${x.s.n} ${x.s.cls.name}</h3>
  <span class="tag">${x.s.role}</span><span class="tag">${x.s.range}</span><span class="tag">${x.s.cls.armor}</span>${x.s.traits.map(t=>`<span class="tag">${t}</span>`).join("")}<p>${x.s.exp}</p></div>`}
 async function bestOf(p,n,who){const need=Math.ceil(n/2),wins={},rolls=[];let out;
@@ -35,5 +35,5 @@ $("#plist").onclick=e=>{if(e.target.dataset.i){players.splice(+e.target.dataset.
 $("#padd").onclick=()=>{const v=$("#pname").value.trim();if(v){players.push(v.replace(/[<>&"]/g,""));$("#pname").value="";renderPlayers()}};
 $("#pname").onkeydown=e=>{if(e.key==="Enter")$("#padd").click()};
 document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("on"));b.classList.add("on");mode=b.dataset.mode;$("#groupbox").hidden=mode!=="group"});
-$("#fac").onchange=update;$("#spin").onclick=spin;
+$("#fac").onchange=update;$("#game").onchange=e=>{setGame(e.target.value);update();document.querySelector("#r1 img").src=cimg(CLASSES[0])};$("#spin").onclick=spin;
 buildFilters();update();["r1","r2"].forEach((id,k)=>{const i=new Image();i.src=k?rimg(RACES[0]):cimg(CLASSES[0]);$("#"+id).append(i)});
