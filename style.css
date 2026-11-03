@@ -291,3 +291,13 @@ footer {
   }
 }
 #spin.off{opacity:.5;cursor:not-allowed}
+.ver {
+  font: 600 0.9rem var(--fu);
+  letter-spacing: 1px;
+  vertical-align: super;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 8px;
+  text-shadow: none;
+}
