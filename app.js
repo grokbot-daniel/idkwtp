@@ -82,12 +82,25 @@ function spinReel(el, imgs, final, ms) {
   return new Promise((res) => {
     const n = 20;
     el.innerHTML = "";
-    const list = [...Array(n)].map(() => pick(imgs)).concat(final);
-    list.forEach((src) => {
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const list = reduce ? [final] : [...Array(n)].map(() => pick(imgs)).concat(final);
+    list.forEach((src, k) => {
       const i = new Image();
       i.src = src;
+      i.alt =
+        k === list.length - 1
+          ? src
+              .split("/")
+              .pop()
+              .replace(/\.\w+$/, "")
+          : "";
       el.append(i);
     });
+    if (reduce) {
+      el.style.transition = "none";
+      el.style.transform = "translateY(0)";
+      return res();
+    }
     el.style.transition = "none";
     el.style.transform = "translateY(0)";
     el.offsetHeight;
